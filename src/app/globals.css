@@ -1,0 +1,129 @@
+@import "tailwindcss";
+
+:root {
+  --color-neon: #e9ff1a;
+  --color-neon-dim: #b9cc15;
+  --color-ink: #050505;
+  --color-panel: #111110;
+  --color-panel-soft: #17170f;
+  --color-off-white: #f4f4ef;
+  --color-muted: #9a9a92;
+}
+
+@theme inline {
+  --color-neon: var(--color-neon);
+  --color-neon-dim: var(--color-neon-dim);
+  --color-ink: var(--color-ink);
+  --color-panel: var(--color-panel);
+  --color-panel-soft: var(--color-panel-soft);
+  --color-off-white: var(--color-off-white);
+  --color-muted: var(--color-muted);
+  --font-display: var(--font-bebas);
+  --font-sans: var(--font-inter);
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-neon-dim) var(--color-ink);
+}
+
+html {
+  background: var(--color-ink);
+}
+
+body {
+  background: var(--color-ink);
+  color: var(--color-off-white);
+  font-family: var(--font-sans), Arial, Helvetica, sans-serif;
+}
+
+.font-display {
+  font-family: var(--font-display), var(--font-sans), sans-serif;
+  letter-spacing: 0.03em;
+}
+
+.neon-text {
+  color: var(--color-neon);
+}
+
+.neon-border {
+  border: 2px solid var(--color-neon);
+}
+
+.neon-glow-line {
+  position: relative;
+}
+
+.neon-glow-line::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 2px;
+  background: var(--color-neon);
+  box-shadow:
+    0 0 6px var(--color-neon),
+    0 0 16px var(--color-neon),
+    0 0 28px rgba(233, 255, 26, 0.4);
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border: 2px solid var(--color-neon);
+  padding: 0.65rem 1.4rem;
+  font-family: var(--font-display), sans-serif;
+  letter-spacing: 0.05em;
+  font-size: 0.95rem;
+  transition:
+    background-color 160ms ease,
+    color 160ms ease,
+    transform 120ms ease;
+  color: var(--color-neon);
+  background: transparent;
+}
+
+.btn:hover {
+  background: var(--color-neon);
+  color: var(--color-ink);
+}
+
+.btn:active {
+  transform: scale(0.98);
+}
+
+.btn-solid {
+  background: var(--color-neon);
+  color: var(--color-ink);
+}
+
+.btn-solid:hover {
+  background: transparent;
+  color: var(--color-neon);
+}
+
+.btn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.btn:disabled:hover {
+  background: transparent;
+  color: var(--color-neon);
+}
+
+.product-frame {
+  border: 2px solid var(--color-neon);
+}
+
+@keyframes chevron-pulse {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(2px);
+  }
+}

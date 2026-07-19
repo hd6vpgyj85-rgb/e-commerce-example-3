@@ -1,0 +1,78 @@
+import Image from "next/image";
+import Link from "next/link";
+import { ProductGrid } from "@/components/ProductGrid";
+import { getVisibleCollections } from "@/lib/collections";
+import { getVisibleProducts } from "@/lib/products";
+import { siteConfig } from "@/lib/site-config";
+
+export const revalidate = 60;
+
+export default async function Home() {
+  const [collections, products] = await Promise.all([
+    getVisibleCollections().catch(() => []),
+    getVisibleProducts().catch(() => []),
+  ]);
+
+  return (
+    <div className="flex flex-col">
+      <section className="mx-auto flex max-w-6xl flex-col items-start gap-6 px-4 py-20 sm:px-6 sm:py-28">
+        <h1 className="font-display text-5xl leading-[0.95] tracking-[0.02em] text-off-white sm:text-7xl">
+          ARMA TU PEDIDO.
+          <br />
+          <span className="text-neon">ACUERDA LA RECOGIDA.</span>
+        </h1>
+        <p className="max-w-md text-sm text-muted sm:text-base">
+          {siteConfig.description}
+        </p>
+        <Link href="/productos" className="btn btn-solid">
+          VER PRODUCTOS
+        </Link>
+      </section>
+
+      {collections.length > 0 && (
+        <section className="mx-auto w-full max-w-6xl px-4 py-10 sm:px-6">
+          <h2 className="font-display text-2xl tracking-[0.08em] text-off-white">
+            COLECCIONES
+          </h2>
+          <div className="mt-6 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
+            {collections.map((c) => (
+              <Link
+                key={c.id}
+                href={`/coleccion/${c.slug}`}
+                className="group flex flex-col gap-3"
+              >
+                <div className="product-frame relative aspect-square w-full overflow-hidden bg-panel">
+                  {c.imageUrl ? (
+                    <Image
+                      src={c.imageUrl}
+                      alt={c.name}
+                      fill
+                      sizes="(min-width: 1024px) 25vw, (min-width: 640px) 33vw, 50vw"
+                      className="object-cover transition-transform duration-300 group-hover:scale-105"
+                    />
+                  ) : (
+                    <div className="flex h-full items-center justify-center text-xs text-muted">
+                      {c.name}
+                    </div>
+                  )}
+                </div>
+                <p className="font-display text-sm tracking-[0.1em] text-off-white transition-colors group-hover:text-neon">
+                  {c.name.toUpperCase()}
+                </p>
+              </Link>
+            ))}
+          </div>
+        </section>
+      )}
+
+      <section className="mx-auto w-full max-w-6xl px-4 py-10 sm:px-6">
+        <h2 className="font-display text-2xl tracking-[0.08em] text-off-white">
+          NUEVOS PRODUCTOS
+        </h2>
+        <div className="mt-6">
+          <ProductGrid products={products.slice(0, 8)} />
+        </div>
+      </section>
+    </div>
+  );
+}
