@@ -21,6 +21,13 @@ export default function CheckoutPage() {
 
   async function handleSend() {
     setStatus("sending");
+
+    // Open the tab synchronously, inside the click handler, before any
+    // `await` — mobile browsers (iOS Safari especially) drop the "user
+    // gesture" that allows window.open() once an async gap has passed,
+    // so opening it after awaiting createOrder() gets silently blocked.
+    const whatsappWindow = window.open("", "_blank", "noopener,noreferrer");
+
     const orderItems: OrderItem[] = items.map((item) => ({
       productId: item.productId,
       name: item.name,
@@ -39,7 +46,12 @@ export default function CheckoutPage() {
       // If Firestore isn't reachable, still let the customer send the WhatsApp message.
     }
 
-    window.open(buildWhatsappLink(message), "_blank", "noopener,noreferrer");
+    const whatsappUrl = buildWhatsappLink(message);
+    if (whatsappWindow) {
+      whatsappWindow.location.href = whatsappUrl;
+    } else {
+      window.location.href = whatsappUrl;
+    }
     clearCart();
     setStatus("done");
   }
