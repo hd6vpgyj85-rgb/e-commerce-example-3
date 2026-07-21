@@ -34,12 +34,12 @@ export default async function Home() {
           <h2 className="font-display text-2xl tracking-[0.08em] text-off-white">
             COLECCIONES
           </h2>
-          <div className="mt-6 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
+          <div className="mt-6 flex gap-4 overflow-x-auto pb-2 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
             {collections.map((c) => (
               <Link
                 key={c.id}
                 href={`/coleccion/${c.slug}`}
-                className="group flex flex-col gap-3"
+                className="group flex w-32 shrink-0 flex-col gap-3 sm:w-40"
               >
                 <div className="product-frame relative aspect-square w-full overflow-hidden bg-panel">
                   {c.imageUrl ? (
@@ -47,7 +47,7 @@ export default async function Home() {
                       src={c.imageUrl}
                       alt={c.name}
                       fill
-                      sizes="(min-width: 1024px) 25vw, (min-width: 640px) 33vw, 50vw"
+                      sizes="160px"
                       className="object-cover transition-transform duration-300 group-hover:scale-105"
                     />
                   ) : (
