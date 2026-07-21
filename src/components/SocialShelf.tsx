@@ -48,16 +48,16 @@ export function SocialShelf() {
               target="_blank"
               rel="noopener noreferrer"
               aria-label={s.label}
-              className="product-frame relative aspect-[856/1482] w-40 shrink-0 overflow-hidden bg-panel sm:w-48"
+              className="product-frame relative aspect-[856/1482] w-40 shrink-0 overflow-hidden bg-panel sm:w-24"
             >
               <div className="flex h-full items-center justify-center">
-                <s.icon size={40} className="text-off-white" />
+                <s.icon size={56} className="text-off-white" />
               </div>
               <span
-                className="absolute bottom-2 right-2 flex h-7 w-7 items-center justify-center rounded-full text-white"
+                className="absolute bottom-2 right-2 flex h-8 w-8 items-center justify-center rounded-full text-white"
                 style={{ backgroundColor: s.color }}
               >
-                <s.icon size={16} strokeWidth={2} />
+                <s.icon size={20} strokeWidth={2} />
               </span>
             </a>
           ))}
