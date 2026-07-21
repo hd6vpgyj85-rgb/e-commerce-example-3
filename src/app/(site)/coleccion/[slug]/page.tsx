@@ -21,15 +21,38 @@ export default async function CollectionPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const collectionData = await getCollectionBySlug(slug).catch(() => null);
+
+  let collectionData;
+  try {
+    collectionData = await getCollectionBySlug(slug);
+  } catch (err) {
+    return (
+      <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6">
+        <p className="text-sm text-red-400">
+          Hubo un problema cargando esta colección:{" "}
+          {err instanceof Error ? err.message : String(err)}
+        </p>
+      </div>
+    );
+  }
 
   if (!collectionData || !collectionData.visible) {
     notFound();
   }
 
-  const products = await getProductsByCollectionId(collectionData.id).catch(
-    () => []
-  );
+  let products;
+  try {
+    products = await getProductsByCollectionId(collectionData.id);
+  } catch (err) {
+    return (
+      <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6">
+        <p className="text-sm text-red-400">
+          Hubo un problema cargando los productos de esta colección:{" "}
+          {err instanceof Error ? err.message : String(err)}
+        </p>
+      </div>
+    );
+  }
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6">
