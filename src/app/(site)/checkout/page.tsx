@@ -6,6 +6,7 @@ import { useState } from "react";
 import { useCart } from "@/context/CartContext";
 import { formatPrice } from "@/lib/format";
 import { createOrder } from "@/lib/orders";
+import { sendOrderNotificationEmail } from "@/lib/order-email";
 import { buildOrderMessage, buildWhatsappLink } from "@/lib/whatsapp";
 import type { OrderItem } from "@/lib/types";
 
@@ -51,6 +52,12 @@ export default function CheckoutPage() {
       await createOrder(orderItems, totalPrice, name, phone, message);
     } catch {
       // If Firestore isn't reachable, still let the customer send the WhatsApp message.
+    }
+
+    try {
+      await sendOrderNotificationEmail(message, name, phone, formatPrice(totalPrice));
+    } catch {
+      // Email notification is a bonus for the shop owner — never block checkout on it.
     }
 
     const whatsappUrl = buildWhatsappLink(message);

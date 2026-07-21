@@ -101,14 +101,38 @@ cualquier momento.
 - **products**: `name`, `slug`, `description`, `price`, `discountPrice`, `stock`,
   `images[]`, `collectionIds[]`, `variants[]` (`{ name, options[] }`), `visible`
 - **orders**: `items[]`, `total`, `status` (`pendiente` / `contactado` /
-  `completado`), `contactMessage`, `createdAt` — se crea automáticamente cuando un
-  cliente confirma el checkout.
+  `completado`), `customerName`, `customerPhone`, `contactMessage`, `createdAt` —
+  se crea automáticamente cuando un cliente confirma el checkout.
 
 `imageUrl`/`images[]` son enlaces directos a imágenes alojadas externamente (ImgBB,
 Cloudinary, etc.), pegados desde el panel de admin.
 
 Cada colección creada en `/admin/colecciones` con `visible: true` aparece de forma
 automática en el menú desplegable del sitio y en `/coleccion/[slug]`.
+
+## Notificación por correo de nuevos pedidos (opcional)
+
+Cada vez que un cliente confirma un pedido, el sitio puede además enviarte un
+correo automático con el detalle (usando [EmailJS](https://www.emailjs.com),
+gratis, sin tarjeta, y sin necesitar un servidor propio):
+
+1. Crea una cuenta gratis en https://www.emailjs.com.
+2. En el panel de EmailJS, ve a **Email Services** → **Add New Service** →
+   elige Gmail (o el correo que uses) → conecta tu cuenta. Copia el
+   **Service ID** que se genera.
+3. Ve a **Email Templates** → **Create New Template**. En el cuerpo del
+   correo usa estas variables (haz clic para insertarlas):
+   `{{customer_name}}`, `{{customer_phone}}`, `{{total}}`, `{{message}}`.
+   Guarda y copia el **Template ID**.
+4. Ve a **Account** → **General** y copia tu **Public Key**.
+5. Agrega estas 3 variables de entorno (en Netlify, igual que las de
+   Firebase):
+   - `NEXT_PUBLIC_EMAILJS_SERVICE_ID`
+   - `NEXT_PUBLIC_EMAILJS_TEMPLATE_ID`
+   - `NEXT_PUBLIC_EMAILJS_PUBLIC_KEY`
+
+Si estas variables no están configuradas, el sitio simplemente no manda el
+correo (no rompe el checkout ni el mensaje de WhatsApp).
 
 ## Despliegue
 
