@@ -11,8 +11,11 @@ export function ProductCard({ product }: { product: Product }) {
   const outOfStock = product.stock <= 0;
 
   return (
-    <Link href={`/producto/${product.slug}`} className="group flex flex-col gap-3">
-      <div className="product-frame relative aspect-square w-full overflow-hidden bg-panel">
+    <Link
+      href={`/producto/${product.slug}`}
+      className="product-frame group flex flex-col gap-3 p-3 transition-colors hover:bg-panel-soft"
+    >
+      <div className="relative aspect-square w-full overflow-hidden bg-panel">
         {product.images[0] ? (
           <SafeImage
             src={product.images[0]}
