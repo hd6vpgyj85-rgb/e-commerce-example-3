@@ -3,7 +3,7 @@ import { ProductGrid } from "@/components/ProductGrid";
 import { getCollectionBySlug } from "@/lib/collections";
 import { getProductsByCollectionId } from "@/lib/products";
 
-export const revalidate = 60;
+export const dynamic = "force-dynamic";
 
 export async function generateMetadata({
   params,

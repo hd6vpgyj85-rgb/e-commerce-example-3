@@ -5,7 +5,7 @@ import { getVisibleCollections } from "@/lib/collections";
 import { getVisibleProducts } from "@/lib/products";
 import { siteConfig } from "@/lib/site-config";
 
-export const revalidate = 60;
+export const dynamic = "force-dynamic";
 
 export default async function Home() {
   const [collections, products] = await Promise.all([
