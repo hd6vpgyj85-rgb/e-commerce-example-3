@@ -1,4 +1,4 @@
-import Image from "next/image";
+import { SafeImage } from "@/components/SafeImage";
 import Link from "next/link";
 import { ProductGrid } from "@/components/ProductGrid";
 import { getVisibleCollections } from "@/lib/collections";
@@ -43,7 +43,7 @@ export default async function Home() {
               >
                 <div className="product-frame relative aspect-square w-full overflow-hidden bg-panel">
                   {c.imageUrl ? (
-                    <Image
+                    <SafeImage
                       src={c.imageUrl}
                       alt={c.name}
                       fill

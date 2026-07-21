@@ -1,6 +1,6 @@
 "use client";
 
-import Image from "next/image";
+import { SafeImage } from "@/components/SafeImage";
 import { useRouter } from "next/navigation";
 import { useState, type FormEvent } from "react";
 import {
@@ -84,12 +84,14 @@ export function CollectionForm({ collection }: { collection?: Collection }) {
 
       <label className="flex flex-col gap-1.5">
         <span className="text-xs text-muted">
-          URL de imagen (súbela antes a un servicio como ImgBB o Cloudinary y
-          pega aquí el enlace)
+          URL de imagen — sube la imagen antes a un servicio como ImgBB o
+          Cloudinary y pega aquí el enlace DIRECTO a la imagen (por ejemplo
+          https://i.ibb.co/..., terminado en .jpg o .png), no el enlace de la
+          página donde se ve la imagen.
         </span>
         {imageUrl && (
           <div className="product-frame relative mb-2 h-32 w-32 overflow-hidden">
-            <Image src={imageUrl} alt="" fill sizes="128px" className="object-cover" />
+            <SafeImage src={imageUrl} alt="" fill sizes="128px" className="object-cover" />
           </div>
         )}
         <input

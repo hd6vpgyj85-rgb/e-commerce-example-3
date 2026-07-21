@@ -1,4 +1,4 @@
-import Image from "next/image";
+import { SafeImage } from "@/components/SafeImage";
 import Link from "next/link";
 import { formatPrice } from "@/lib/format";
 import type { Product } from "@/lib/types";
@@ -14,7 +14,7 @@ export function ProductCard({ product }: { product: Product }) {
     <Link href={`/producto/${product.slug}`} className="group flex flex-col gap-3">
       <div className="product-frame relative aspect-square w-full overflow-hidden bg-panel">
         {product.images[0] ? (
-          <Image
+          <SafeImage
             src={product.images[0]}
             alt={product.name}
             fill

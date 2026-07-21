@@ -1,6 +1,6 @@
 "use client";
 
-import Image from "next/image";
+import { SafeImage } from "@/components/SafeImage";
 import { useRouter } from "next/navigation";
 import { useState, type FormEvent } from "react";
 import { Plus, Trash2, X } from "@/components/icons";
@@ -213,22 +213,36 @@ export function ProductForm({
 
       <div className="flex flex-col gap-2">
         <span className="text-xs text-muted">
-          Imágenes (súbelas antes a un servicio como ImgBB o Cloudinary y pega
-          aquí cada enlace)
+          Imágenes del producto — puedes agregar varias, la primera será la
+          portada. Sube cada imagen a un servicio como ImgBB o Cloudinary y
+          pega aquí el enlace DIRECTO a la imagen (por ejemplo
+          https://i.ibb.co/..., terminado en .jpg o .png), no el enlace de la
+          página donde se ve la imagen.
         </span>
         {images.length > 0 && (
           <div className="flex flex-wrap gap-3">
-            {images.map((url) => (
-              <div key={url} className="product-frame relative h-20 w-20">
-                <Image src={url} alt="" fill sizes="80px" className="object-cover" />
-                <button
-                  type="button"
-                  onClick={() => removeImage(url)}
-                  aria-label="Quitar imagen"
-                  className="absolute -right-2 -top-2 bg-ink text-off-white"
-                >
-                  <X size={14} />
-                </button>
+            {images.map((url, i) => (
+              <div key={url} className="flex flex-col items-center gap-1">
+                <div className="product-frame relative h-20 w-20">
+                  <SafeImage
+                    src={url}
+                    alt=""
+                    fill
+                    sizes="80px"
+                    className="object-cover"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => removeImage(url)}
+                    aria-label="Quitar imagen"
+                    className="absolute -right-2 -top-2 bg-ink text-off-white"
+                  >
+                    <X size={14} />
+                  </button>
+                </div>
+                <span className="text-[10px] text-muted">
+                  {i === 0 ? "Portada" : `Imagen ${i + 1}`}
+                </span>
               </div>
             ))}
           </div>
@@ -248,7 +262,7 @@ export function ProductForm({
             className="flex-1 border-2 border-white/10 bg-panel px-3 py-2 text-sm text-off-white outline-none focus:border-neon"
           />
           <button type="button" onClick={addImageUrl} className="btn !px-4">
-            AGREGAR
+            AGREGAR IMAGEN
           </button>
         </div>
       </div>

@@ -1,6 +1,6 @@
 "use client";
 
-import Image from "next/image";
+import { SafeImage } from "@/components/SafeImage";
 import { useState } from "react";
 
 export function ProductGallery({
@@ -17,7 +17,7 @@ export function ProductGallery({
     <div className="flex flex-col gap-3">
       <div className="product-frame relative aspect-square w-full overflow-hidden bg-panel">
         {gallery[active] ? (
-          <Image
+          <SafeImage
             src={gallery[active]}
             alt={name}
             fill
@@ -44,7 +44,7 @@ export function ProductGallery({
               }`}
               aria-label={`Ver imagen ${i + 1}`}
             >
-              <Image src={src} alt="" fill sizes="64px" className="object-cover" />
+              <SafeImage src={src} alt="" fill sizes="64px" className="object-cover" />
             </button>
           ))}
         </div>

@@ -1,6 +1,6 @@
 "use client";
 
-import Image from "next/image";
+import { SafeImage } from "@/components/SafeImage";
 import Link from "next/link";
 import { useState } from "react";
 import { useCart } from "@/context/CartContext";
@@ -88,7 +88,7 @@ export default function CheckoutPage() {
           >
             <div className="product-frame relative h-20 w-20 shrink-0 overflow-hidden bg-panel">
               {item.image && (
-                <Image
+                <SafeImage
                   src={item.image}
                   alt={item.name}
                   fill
