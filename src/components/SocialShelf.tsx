@@ -1,27 +1,37 @@
-import { Facebook, Instagram } from "@/components/icons";
+import { Facebook, Instagram, Mail, WhatsApp } from "@/components/icons";
+import { siteConfig } from "@/lib/site-config";
 
 const socialLinks = [
   {
-    href: "https://www.instagram.com/net._.ly?igsh=cXN5MW1randmbnY5&utm_source=qr",
+    href: siteConfig.contact.instagramUrl,
     icon: Instagram,
     color: "#E1306C",
-    label: "Instagram @net._.ly",
+    label: "Instagram",
   },
   {
-    href: "https://www.instagram.com/yuklstore?igsh=MTN6ZzV1cjNsNmlqNA%3D%3D&utm_source=qr",
-    icon: Instagram,
-    color: "#E1306C",
-    label: "Instagram @yuklstore",
-  },
-  {
-    href: "https://www.facebook.com/share/1LA4YwfK43/?mibextid=wwXIfr",
+    href: siteConfig.contact.facebookUrl,
     icon: Facebook,
     color: "#1877F2",
     label: "Facebook",
   },
+  {
+    href: `https://wa.me/${siteConfig.contact.whatsappNumber}`,
+    icon: WhatsApp,
+    color: "#25D366",
+    label: "WhatsApp",
+  },
+  {
+    href: `mailto:${siteConfig.contact.email}`,
+    icon: Mail,
+    color: "#EA4335",
+    label: "Correo",
+  },
 ] as const;
 
-const items = [...socialLinks, ...socialLinks];
+// Repeated enough times that the row is always wider than any screen, so the
+// seamless loop (translateX 0 -> -25%, one quarter = one full set) never
+// exposes empty space at the edge on wide viewports.
+const items = [...socialLinks, ...socialLinks, ...socialLinks, ...socialLinks];
 
 export function SocialShelf() {
   return (
@@ -33,7 +43,7 @@ export function SocialShelf() {
         <div className="flex w-max animate-social-scroll gap-4 px-4 group-hover:[animation-play-state:paused] sm:px-6">
           {items.map((s, i) => (
             <a
-              key={`${s.href}-${i}`}
+              key={`${s.label}-${i}`}
               href={s.href}
               target="_blank"
               rel="noopener noreferrer"

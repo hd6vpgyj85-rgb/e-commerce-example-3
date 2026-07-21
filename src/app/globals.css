@@ -134,12 +134,12 @@ body {
     transform: translateX(0);
   }
   to {
-    transform: translateX(-50%);
+    transform: translateX(-25%);
   }
 }
 
 .animate-social-scroll {
-  animation: social-scroll 22s linear infinite;
+  animation: social-scroll 28s linear infinite;
 }
 
 @media (prefers-reduced-motion: reduce) {
