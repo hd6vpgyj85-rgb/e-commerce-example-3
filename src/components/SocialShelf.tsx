@@ -1,24 +1,20 @@
-import Image from "next/image";
 import { Facebook, Instagram } from "@/components/icons";
 
 const socialLinks = [
   {
     href: "https://www.instagram.com/net._.ly?igsh=cXN5MW1randmbnY5&utm_source=qr",
-    image: "/social-netly.jpg",
     icon: Instagram,
     color: "#E1306C",
     label: "Instagram @net._.ly",
   },
   {
     href: "https://www.instagram.com/yuklstore?igsh=MTN6ZzV1cjNsNmlqNA%3D%3D&utm_source=qr",
-    image: "/social-yuklstore.jpg",
     icon: Instagram,
     color: "#E1306C",
     label: "Instagram @yuklstore",
   },
   {
     href: "https://www.facebook.com/share/1LA4YwfK43/?mibextid=wwXIfr",
-    image: null,
     icon: Facebook,
     color: "#1877F2",
     label: "Facebook",
@@ -44,19 +40,9 @@ export function SocialShelf() {
               aria-label={s.label}
               className="product-frame relative aspect-[856/1482] w-40 shrink-0 overflow-hidden bg-panel sm:w-48"
             >
-              {s.image ? (
-                <Image
-                  src={s.image}
-                  alt={s.label}
-                  fill
-                  sizes="192px"
-                  className="object-contain"
-                />
-              ) : (
-                <div className="flex h-full items-center justify-center">
-                  <s.icon size={40} className="text-off-white" />
-                </div>
-              )}
+              <div className="flex h-full items-center justify-center">
+                <s.icon size={40} className="text-off-white" />
+              </div>
               <span
                 className="absolute bottom-2 right-2 flex h-7 w-7 items-center justify-center rounded-full text-white"
                 style={{ backgroundColor: s.color }}
