@@ -30,13 +30,13 @@ function mapCollection(id: string, data: Record<string, unknown>): Collection {
 }
 
 export async function getVisibleCollections(): Promise<Collection[]> {
-  const q = query(
-    collection(db, COLLECTIONS_PATH),
-    where("visible", "==", true),
-    orderBy("order", "asc")
-  );
+  // Filter/sort in JS instead of combining where()+orderBy() in the query —
+  // that combination needs a composite Firestore index to be created first.
+  const q = query(collection(db, COLLECTIONS_PATH), where("visible", "==", true));
   const snap = await getDocs(q);
-  return snap.docs.map((d) => mapCollection(d.id, d.data()));
+  return snap.docs
+    .map((d) => mapCollection(d.id, d.data()))
+    .sort((a, b) => a.order - b.order);
 }
 
 export async function getAllCollections(): Promise<Collection[]> {
@@ -46,13 +46,7 @@ export async function getAllCollections(): Promise<Collection[]> {
 }
 
 export async function getCollectionBySlug(slug: string): Promise<Collection | null> {
-  // Also filter on visible so the security rule can evaluate this "list"
-  // query per-document (it depends on the same field being queried).
-  const q = query(
-    collection(db, COLLECTIONS_PATH),
-    where("slug", "==", slug),
-    where("visible", "==", true)
-  );
+  const q = query(collection(db, COLLECTIONS_PATH), where("slug", "==", slug));
   const snap = await getDocs(q);
   if (snap.empty) return null;
   const d = snap.docs[0];
