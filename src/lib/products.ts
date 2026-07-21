@@ -36,13 +36,13 @@ function mapProduct(id: string, data: Record<string, unknown>): Product {
 }
 
 export async function getVisibleProducts(): Promise<Product[]> {
-  const q = query(
-    collection(db, PRODUCTS_PATH),
-    where("visible", "==", true),
-    orderBy("createdAt", "desc")
-  );
+  // Filter/sort in JS instead of combining where()+orderBy() in the query —
+  // that combination needs a composite Firestore index to be created first.
+  const q = query(collection(db, PRODUCTS_PATH), where("visible", "==", true));
   const snap = await getDocs(q);
-  return snap.docs.map((d) => mapProduct(d.id, d.data()));
+  return snap.docs
+    .map((d) => mapProduct(d.id, d.data()))
+    .sort((a, b) => (b.createdAt ?? 0) - (a.createdAt ?? 0));
 }
 
 export async function getAllProducts(): Promise<Product[]> {
@@ -54,23 +54,18 @@ export async function getAllProducts(): Promise<Product[]> {
 export async function getProductsByCollectionId(
   collectionId: string
 ): Promise<Product[]> {
+  // A single array-contains filter needs no composite index; filter by
+  // visible in JS instead of adding a second where() clause to the query.
   const q = query(
     collection(db, PRODUCTS_PATH),
-    where("visible", "==", true),
     where("collectionIds", "array-contains", collectionId)
   );
   const snap = await getDocs(q);
-  return snap.docs.map((d) => mapProduct(d.id, d.data()));
+  return snap.docs.map((d) => mapProduct(d.id, d.data())).filter((p) => p.visible);
 }
 
 export async function getProductBySlug(slug: string): Promise<Product | null> {
-  // Also filter on visible so the security rule can evaluate this "list"
-  // query per-document (it depends on the same field being queried).
-  const q = query(
-    collection(db, PRODUCTS_PATH),
-    where("slug", "==", slug),
-    where("visible", "==", true)
-  );
+  const q = query(collection(db, PRODUCTS_PATH), where("slug", "==", slug));
   const snap = await getDocs(q);
   if (snap.empty) return null;
   const d = snap.docs[0];
