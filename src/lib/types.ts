@@ -56,6 +56,8 @@ export interface Order {
   items: OrderItem[];
   total: number;
   status: OrderStatus;
+  customerName: string;
+  customerPhone: string;
   contactMessage: string;
   createdAt?: number;
 }

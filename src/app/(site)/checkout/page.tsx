@@ -18,8 +18,13 @@ function variantLabel(variant: Record<string, string>): string {
 export default function CheckoutPage() {
   const { items, totalPrice, clearCart } = useCart();
   const [status, setStatus] = useState<"idle" | "sending" | "done">("idle");
+  const [customerName, setCustomerName] = useState("");
+  const [customerPhone, setCustomerPhone] = useState("");
+
+  const canSend = customerPhone.trim().length >= 7;
 
   async function handleSend() {
+    if (!canSend) return;
     setStatus("sending");
 
     // Open the tab synchronously, inside the click handler, before any
@@ -38,10 +43,12 @@ export default function CheckoutPage() {
       unitPrice: item.unitPrice,
       lineTotal: item.unitPrice * item.qty,
     }));
-    const message = buildOrderMessage(items, totalPrice);
+    const name = customerName.trim();
+    const phone = customerPhone.trim();
+    const message = buildOrderMessage(items, totalPrice, name, phone);
 
     try {
-      await createOrder(orderItems, totalPrice, message);
+      await createOrder(orderItems, totalPrice, name, phone, message);
     } catch {
       // If Firestore isn't reachable, still let the customer send the WhatsApp message.
     }
@@ -137,10 +144,36 @@ export default function CheckoutPage() {
           WhatsApp con el detalle de tu pedido para que nos pongamos de
           acuerdo en un punto medio y la hora de recogida.
         </p>
+
+        <div className="mt-5 flex flex-col gap-3">
+          <label className="flex flex-col gap-1.5">
+            <span className="text-xs text-muted">Nombre</span>
+            <input
+              value={customerName}
+              onChange={(e) => setCustomerName(e.target.value)}
+              placeholder="Tu nombre"
+              className="border-2 border-white/10 bg-ink px-3 py-2 text-sm text-off-white outline-none focus:border-neon"
+            />
+          </label>
+          <label className="flex flex-col gap-1.5">
+            <span className="text-xs text-muted">
+              Número de teléfono (para contactarte)
+            </span>
+            <input
+              type="tel"
+              required
+              value={customerPhone}
+              onChange={(e) => setCustomerPhone(e.target.value)}
+              placeholder="656 000 0000"
+              className="border-2 border-white/10 bg-ink px-3 py-2 text-sm text-off-white outline-none focus:border-neon"
+            />
+          </label>
+        </div>
+
         <button
           type="button"
           onClick={handleSend}
-          disabled={status === "sending"}
+          disabled={status === "sending" || !canSend}
           className="btn btn-solid mt-5 w-full"
         >
           {status === "sending" ? "ABRIENDO WHATSAPP..." : "ENVIAR MENSAJE POR WHATSAPP"}

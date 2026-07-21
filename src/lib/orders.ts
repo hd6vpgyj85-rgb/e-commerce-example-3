@@ -20,6 +20,8 @@ function mapOrder(id: string, data: Record<string, unknown>): Order {
     items: (data.items as OrderItem[]) ?? [],
     total: (data.total as number) ?? 0,
     status: (data.status as OrderStatus) ?? "pendiente",
+    customerName: (data.customerName as string) ?? "",
+    customerPhone: (data.customerPhone as string) ?? "",
     contactMessage: (data.contactMessage as string) ?? "",
     createdAt: (data.createdAt as Timestamp | undefined)?.toMillis?.(),
   };
@@ -28,12 +30,16 @@ function mapOrder(id: string, data: Record<string, unknown>): Order {
 export async function createOrder(
   items: OrderItem[],
   total: number,
+  customerName: string,
+  customerPhone: string,
   contactMessage: string
 ): Promise<string> {
   const docRef = await addDoc(collection(db, ORDERS_PATH), {
     items,
     total,
     status: "pendiente" as OrderStatus,
+    customerName,
+    customerPhone,
     contactMessage,
     createdAt: serverTimestamp(),
   });
