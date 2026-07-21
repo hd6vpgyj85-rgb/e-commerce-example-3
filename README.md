@@ -72,6 +72,20 @@ Y en `.env.local` agrega:
 NEXT_PUBLIC_USE_FIREBASE_EMULATORS=true
 ```
 
+## Datos de ejemplo
+
+Para no arrancar con la tienda vacía, `scripts/seed-demo-data.mjs` crea una
+colección ("Arte Urbano") y 3 productos de ejemplo (con imágenes incluidas en
+`scripts/seed-assets/`). Requiere que ya hayas completado la configuración de
+Firebase de arriba y que tengas el correo/contraseña de tu usuario admin:
+
+```bash
+SEED_ADMIN_EMAIL="tu-correo@ejemplo.com" SEED_ADMIN_PASSWORD="tu-contraseña" npm run seed:demo
+```
+
+Puedes editar o borrar estos productos de ejemplo desde `/admin/productos` en
+cualquier momento.
+
 ## Modelo de datos
 
 - **collections**: `name`, `slug`, `imageUrl`, `order`, `visible`

@@ -2,6 +2,10 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   images: {
+    // The Storage emulator serves over plain http from a private IP, which
+    // Next's image optimizer always refuses to proxy — skip optimization
+    // only in that local dev scenario.
+    unoptimized: process.env.NEXT_PUBLIC_USE_FIREBASE_EMULATORS === "true",
     remotePatterns: [
       {
         protocol: "https",

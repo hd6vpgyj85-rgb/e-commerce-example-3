@@ -41,7 +41,7 @@ export function NavBar({ collections }: { collections: Collection[] }) {
             </button>
 
             <div
-              className={`absolute left-0 top-full z-40 min-w-56 origin-top bg-panel py-2 transition-all duration-200 ease-out ${
+              className={`absolute left-1/2 top-full z-40 min-w-56 origin-top -translate-x-1/2 bg-panel py-2 transition-all duration-200 ease-out ${
                 collectionsOpen
                   ? "pointer-events-auto translate-y-0 opacity-100"
                   : "pointer-events-none -translate-y-1 opacity-0"
