@@ -1,6 +1,3 @@
-import { readFileSync } from "node:fs";
-import path from "node:path";
-import { fileURLToPath } from "node:url";
 import { initializeApp } from "firebase/app";
 import {
   connectAuthEmulator,
@@ -14,21 +11,11 @@ import {
   getFirestore,
   serverTimestamp,
 } from "firebase/firestore";
-import {
-  connectStorageEmulator,
-  getDownloadURL,
-  getStorage,
-  ref,
-  uploadBytes,
-} from "firebase/storage";
-
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const firebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
   authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
   projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
-  storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
   messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
   appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
 };
@@ -36,6 +23,16 @@ const firebaseConfig = {
 const email = process.env.SEED_ADMIN_EMAIL;
 const password = process.env.SEED_ADMIN_PASSWORD;
 const useEmulators = process.env.NEXT_PUBLIC_USE_FIREBASE_EMULATORS === "true";
+
+// This project has no Firebase Storage bucket configured (it requires a
+// billing account), so product images are external URLs — upload the files
+// in scripts/seed-assets/ to a free image host (ImgBB, Cloudinary, etc.) and
+// pass the resulting links here before running this script.
+const imageUrls = {
+  spiderPunk: process.env.SEED_IMAGE_SPIDER_PUNK_URL,
+  graffiti: process.env.SEED_IMAGE_GRAFFITI_URL,
+  pintura: process.env.SEED_IMAGE_PINTURA_URL,
+};
 
 if (!firebaseConfig.apiKey || !firebaseConfig.projectId) {
   console.error(
@@ -50,24 +47,22 @@ if (!email || !password) {
   );
   process.exit(1);
 }
+if (!imageUrls.spiderPunk || !imageUrls.graffiti || !imageUrls.pintura) {
+  console.error(
+    "Sube las 3 imágenes de scripts/seed-assets/ a un servicio como ImgBB o " +
+      "Cloudinary y define SEED_IMAGE_SPIDER_PUNK_URL, SEED_IMAGE_GRAFFITI_URL " +
+      "y SEED_IMAGE_PINTURA_URL con los enlaces antes de correr este script."
+  );
+  process.exit(1);
+}
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
-const storage = getStorage(app);
 
 if (useEmulators) {
   connectAuthEmulator(auth, "http://127.0.0.1:9099", { disableWarnings: true });
   connectFirestoreEmulator(db, "127.0.0.1", 8080);
-  connectStorageEmulator(storage, "127.0.0.1", 9199);
-}
-
-async function uploadImage(fileName, storagePath) {
-  const localPath = path.join(__dirname, "seed-assets", fileName);
-  const bytes = readFileSync(localPath);
-  const storageRef = ref(storage, storagePath);
-  await uploadBytes(storageRef, bytes, { contentType: "image/jpeg" });
-  return getDownloadURL(storageRef);
 }
 
 const products = [
@@ -79,7 +74,7 @@ const products = [
     price: 350,
     discountPrice: null,
     stock: 8,
-    file: "spider-punk.jpg",
+    imageUrl: imageUrls.spiderPunk,
     variants: [{ name: "Tamaño", options: ["Chico", "Mediano", "Grande"] }],
   },
   {
@@ -90,7 +85,7 @@ const products = [
     price: 280,
     discountPrice: 240,
     stock: 6,
-    file: "graffiti-no-drugs.jpg",
+    imageUrl: imageUrls.graffiti,
     variants: [{ name: "Tamaño", options: ["Chico", "Mediano"] }],
   },
   {
@@ -100,7 +95,7 @@ const products = [
     price: 600,
     discountPrice: null,
     stock: 1,
-    file: "pintura-abstracta.jpg",
+    imageUrl: imageUrls.pintura,
     variants: [],
   },
 ];
@@ -120,7 +115,6 @@ async function main() {
   console.log("Colección creada:", collectionRef.id);
 
   for (const p of products) {
-    const url = await uploadImage(p.file, `products/seed-${Date.now()}-${p.file}`);
     const docRef = await addDoc(collection(db, "products"), {
       name: p.name,
       slug: p.slug,
@@ -128,7 +122,7 @@ async function main() {
       price: p.price,
       discountPrice: p.discountPrice,
       stock: p.stock,
-      images: [url],
+      images: [p.imageUrl],
       collectionIds: [collectionRef.id],
       variants: p.variants,
       visible: true,

@@ -9,7 +9,12 @@ se abre WhatsApp con el detalle del pedido para acordar un punto medio de recogi
 
 - Next.js 16 (App Router) + TypeScript + Tailwind CSS 4
 - Firebase: Firestore (productos, colecciones, pedidos), Authentication (acceso del
-  administrador), Storage (imágenes)
+  administrador)
+
+Las imágenes de productos y colecciones **no** usan Firebase Storage (requiere una
+cuenta de facturación de Google Cloud). En su lugar, el admin sube la imagen a un
+servicio gratuito como [ImgBB](https://imgbb.com/) o [Cloudinary](https://cloudinary.com/)
+y pega el enlace en el panel — ver "Modelo de datos" abajo.
 
 ## Desarrollo local
 
@@ -32,38 +37,36 @@ como se indica abajo.
    contraseña) — con esa cuenta se entra a `/admin`.
 3. **Habilitar Firestore**: *Build → Firestore Database → Create database* (modo
    producción, cualquier región).
-4. **Habilitar Storage**: *Build → Storage → Get started* (para las imágenes de
-   productos y colecciones).
-5. **Registrar una app web**: en *Project settings → General → Your apps*, agrega
+4. **Registrar una app web**: en *Project settings → General → Your apps*, agrega
    una app web y copia sus credenciales (`apiKey`, `authDomain`, etc.).
-6. **Variables de entorno**: copia `.env.example` a `.env.local` y llena los valores
+5. **Variables de entorno**: copia `.env.example` a `.env.local` y llena los valores
    con las credenciales del paso anterior:
 
    ```bash
    cp .env.example .env.local
    ```
 
-7. **Reglas de seguridad e índices**: con la [Firebase CLI](https://firebase.google.com/docs/cli)
+6. **Reglas de seguridad e índices**: con la [Firebase CLI](https://firebase.google.com/docs/cli)
    instalada y sesión iniciada (`firebase login`), enlaza este proyecto y despliega
    las reglas incluidas en el repo:
 
    ```bash
    firebase use --add        # selecciona tu proyecto de Firebase
-   firebase deploy --only firestore:rules,firestore:indexes,storage
+   firebase deploy --only firestore:rules,firestore:indexes
    ```
 
-   Las reglas (`firestore.rules`, `storage.rules`) dejan lectura pública solo para
-   productos/colecciones marcados como visibles, y restringen la escritura y la
-   lectura de pedidos a la cuenta autenticada del administrador.
+   Las reglas (`firestore.rules`) dejan lectura pública solo para productos/colecciones
+   marcados como visibles, y restringen la escritura y la lectura de pedidos a la
+   cuenta autenticada del administrador.
 
 Con esto, `npm run dev` ya debería conectar con tu proyecto real: entra a
 `/admin/login`, inicia sesión con el usuario que creaste, y empieza a publicar
-colecciones y productos.
+colecciones y productos (pegando el enlace de la imagen que subiste a ImgBB/Cloudinary).
 
 ## Emuladores de Firebase (opcional, para desarrollo sin tocar datos reales)
 
 ```bash
-firebase emulators:start --only auth,firestore,storage
+firebase emulators:start --only auth,firestore
 ```
 
 Y en `.env.local` agrega:
@@ -75,12 +78,18 @@ NEXT_PUBLIC_USE_FIREBASE_EMULATORS=true
 ## Datos de ejemplo
 
 Para no arrancar con la tienda vacía, `scripts/seed-demo-data.mjs` crea una
-colección ("Arte Urbano") y 3 productos de ejemplo (con imágenes incluidas en
-`scripts/seed-assets/`). Requiere que ya hayas completado la configuración de
-Firebase de arriba y que tengas el correo/contraseña de tu usuario admin:
+colección ("Arte Urbano") y 3 productos de ejemplo con las imágenes en
+`scripts/seed-assets/`. Como el proyecto no usa Storage, primero sube esas 3
+imágenes a un servicio como ImgBB y pasa los enlaces resultantes por variables
+de entorno:
 
 ```bash
-SEED_ADMIN_EMAIL="tu-correo@ejemplo.com" SEED_ADMIN_PASSWORD="tu-contraseña" npm run seed:demo
+SEED_ADMIN_EMAIL="tu-correo@ejemplo.com" \
+SEED_ADMIN_PASSWORD="tu-contraseña" \
+SEED_IMAGE_SPIDER_PUNK_URL="https://..." \
+SEED_IMAGE_GRAFFITI_URL="https://..." \
+SEED_IMAGE_PINTURA_URL="https://..." \
+npm run seed:demo
 ```
 
 Puedes editar o borrar estos productos de ejemplo desde `/admin/productos` en
@@ -95,13 +104,16 @@ cualquier momento.
   `completado`), `contactMessage`, `createdAt` — se crea automáticamente cuando un
   cliente confirma el checkout.
 
+`imageUrl`/`images[]` son enlaces directos a imágenes alojadas externamente (ImgBB,
+Cloudinary, etc.), pegados desde el panel de admin.
+
 Cada colección creada en `/admin/colecciones` con `visible: true` aparece de forma
 automática en el menú desplegable del sitio y en `/coleccion/[slug]`.
 
 ## Despliegue
 
 El proyecto es una app Next.js estándar: se puede desplegar en
-[Vercel](https://vercel.com) (recomendado, cero configuración) o en Firebase
+[Vercel](https://vercel.com), [Netlify](https://netlify.com), o en Firebase
 Hosting usando la [integración de Next.js de Firebase](https://firebase.google.com/docs/hosting/frameworks/nextjs).
-En ambos casos, configura las mismas variables de entorno de `.env.local` en el
+En cualquier caso, configura las mismas variables de entorno de `.env.local` en el
 panel del proveedor de hosting.

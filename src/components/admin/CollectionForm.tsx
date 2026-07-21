@@ -9,7 +9,6 @@ import {
   updateCollection,
 } from "@/lib/collections";
 import { slugify } from "@/lib/slug";
-import { uploadCollectionImage } from "@/lib/upload";
 import type { Collection } from "@/lib/types";
 
 export function CollectionForm({ collection }: { collection?: Collection }) {
@@ -22,23 +21,8 @@ export function CollectionForm({ collection }: { collection?: Collection }) {
   const [imageUrl, setImageUrl] = useState(collection?.imageUrl ?? "");
   const [order, setOrder] = useState(collection?.order ?? 0);
   const [visible, setVisible] = useState(collection?.visible ?? true);
-  const [uploading, setUploading] = useState(false);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
-
-  async function handleImageChange(e: React.ChangeEvent<HTMLInputElement>) {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    setUploading(true);
-    try {
-      const url = await uploadCollectionImage(file);
-      setImageUrl(url);
-    } catch {
-      setError("No se pudo subir la imagen.");
-    } finally {
-      setUploading(false);
-    }
-  }
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
@@ -97,19 +81,22 @@ export function CollectionForm({ collection }: { collection?: Collection }) {
       </label>
 
       <label className="flex flex-col gap-1.5">
-        <span className="text-xs text-muted">Imagen</span>
+        <span className="text-xs text-muted">
+          URL de imagen (súbela antes a un servicio como ImgBB o Cloudinary y
+          pega aquí el enlace)
+        </span>
         {imageUrl && (
           <div className="product-frame relative mb-2 h-32 w-32 overflow-hidden">
             <Image src={imageUrl} alt="" fill sizes="128px" className="object-cover" />
           </div>
         )}
         <input
-          type="file"
-          accept="image/*"
-          onChange={handleImageChange}
-          className="text-xs text-muted"
+          type="url"
+          placeholder="https://..."
+          value={imageUrl}
+          onChange={(e) => setImageUrl(e.target.value)}
+          className="border-2 border-white/10 bg-panel px-3 py-2 text-sm text-off-white outline-none focus:border-neon"
         />
-        {uploading && <span className="text-xs text-neon">Subiendo...</span>}
       </label>
 
       <label className="flex flex-col gap-1.5">
