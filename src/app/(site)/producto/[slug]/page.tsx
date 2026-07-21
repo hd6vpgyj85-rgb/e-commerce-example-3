@@ -3,6 +3,7 @@ import { ProductActions } from "@/components/ProductActions";
 import { ProductGallery } from "@/components/ProductGallery";
 import { RelatedProducts } from "@/components/RelatedProducts";
 import { getProductBySlug, getRandomRelatedProducts } from "@/lib/products";
+import type { Product } from "@/lib/types";
 
 export const dynamic = "force-dynamic";
 
@@ -22,13 +23,31 @@ export default async function ProductPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const product = await getProductBySlug(slug).catch(() => null);
+
+  let product;
+  try {
+    product = await getProductBySlug(slug);
+  } catch (err) {
+    return (
+      <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6">
+        <p className="text-sm text-red-400">
+          Hubo un problema cargando este producto:{" "}
+          {err instanceof Error ? err.message : String(err)}
+        </p>
+      </div>
+    );
+  }
 
   if (!product || !product.visible) {
     notFound();
   }
 
-  const related = await getRandomRelatedProducts(product.id, 4).catch(() => []);
+  let related: Product[];
+  try {
+    related = await getRandomRelatedProducts(product.id, 4);
+  } catch {
+    related = [];
+  }
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6">
