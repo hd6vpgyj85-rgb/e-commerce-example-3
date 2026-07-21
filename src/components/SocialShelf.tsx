@@ -35,7 +35,7 @@ const items = [...socialLinks, ...socialLinks, ...socialLinks, ...socialLinks];
 
 export function SocialShelf() {
   return (
-    <section className="w-full py-10">
+    <section className="w-full py-10 sm:hidden">
       <h2 className="mx-auto max-w-6xl px-4 font-display text-2xl tracking-[0.08em] text-off-white sm:px-6">
         SÍGUENOS
       </h2>
