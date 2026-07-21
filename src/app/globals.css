@@ -116,6 +116,7 @@ body {
 
 .product-frame {
   border: 2px solid var(--color-neon);
+  border-radius: 1rem;
 }
 
 @keyframes chevron-pulse {
