@@ -1,6 +1,7 @@
 import { SafeImage } from "@/components/SafeImage";
 import Link from "next/link";
 import { ProductGrid } from "@/components/ProductGrid";
+import { SocialShelf } from "@/components/SocialShelf";
 import { getVisibleCollections } from "@/lib/collections";
 import { getVisibleProducts } from "@/lib/products";
 import { siteConfig } from "@/lib/site-config";
@@ -73,6 +74,8 @@ export default async function Home() {
           <ProductGrid products={products.slice(0, 8)} />
         </div>
       </section>
+
+      <SocialShelf />
     </div>
   );
 }
