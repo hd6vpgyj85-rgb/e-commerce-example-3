@@ -110,23 +110,27 @@ export function NavBar({ collections }: { collections: Collection[] }) {
           >
             TODOS LOS PRODUCTOS
           </Link>
-          <p className="pt-2 font-display text-xs tracking-[0.15em] text-muted">
-            COLECCIONES
-          </p>
-          {collections.length === 0 ? (
-            <p className="py-1 text-xs text-muted">Aún no hay colecciones</p>
-          ) : (
-            collections.map((c) => (
-              <Link
-                key={c.id}
-                href={`/coleccion/${c.slug}`}
-                className="py-2 pl-2 text-sm text-off-white"
-                onClick={() => setMobileOpen(false)}
-              >
-                {c.name}
-              </Link>
-            ))
-          )}
+          <div className="flex w-full flex-col items-center">
+            <p className="pt-2 font-display text-xs tracking-[0.15em] text-muted">
+              COLECCIONES
+            </p>
+            <div className="flex w-fit flex-col items-start">
+              {collections.length === 0 ? (
+                <p className="py-1 text-xs text-muted">Aún no hay colecciones</p>
+              ) : (
+                collections.map((c) => (
+                  <Link
+                    key={c.id}
+                    href={`/coleccion/${c.slug}`}
+                    className="py-2 pl-2 text-sm text-off-white"
+                    onClick={() => setMobileOpen(false)}
+                  >
+                    {c.name}
+                  </Link>
+                ))
+              )}
+            </div>
+          </div>
         </div>
       </div>
     </nav>

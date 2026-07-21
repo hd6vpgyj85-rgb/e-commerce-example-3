@@ -13,9 +13,9 @@ export function Header({ collections }: { collections: Collection[] }) {
           <Image
             src="/logo-duck.png"
             alt=""
-            width={40}
-            height={40}
-            className="h-9 w-9 object-contain"
+            width={28}
+            height={28}
+            className="h-6 w-6 object-contain"
             priority
           />
           <span className="font-display text-2xl tracking-[0.2em] text-neon">
