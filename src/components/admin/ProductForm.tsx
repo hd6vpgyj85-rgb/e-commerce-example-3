@@ -6,7 +6,6 @@ import { useState, type FormEvent } from "react";
 import { Plus, Trash2, X } from "@/components/icons";
 import { createProduct, deleteProduct, updateProduct } from "@/lib/products";
 import { slugify } from "@/lib/slug";
-import { uploadProductImage } from "@/lib/upload";
 import type { Collection, Product, ProductVariant } from "@/lib/types";
 
 interface VariantRow {
@@ -45,23 +44,15 @@ export function ProductForm({
     toVariantRows(product?.variants ?? [])
   );
   const [visible, setVisible] = useState(product?.visible ?? true);
-  const [uploading, setUploading] = useState(false);
+  const [newImageUrl, setNewImageUrl] = useState("");
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
 
-  async function handleImagesChange(e: React.ChangeEvent<HTMLInputElement>) {
-    const files = Array.from(e.target.files ?? []);
-    if (files.length === 0) return;
-    setUploading(true);
-    try {
-      const urls = await Promise.all(files.map(uploadProductImage));
-      setImages((prev) => [...prev, ...urls]);
-    } catch {
-      setError("No se pudo subir alguna imagen.");
-    } finally {
-      setUploading(false);
-      e.target.value = "";
-    }
+  function addImageUrl() {
+    const url = newImageUrl.trim();
+    if (!url || images.includes(url)) return;
+    setImages((prev) => [...prev, url]);
+    setNewImageUrl("");
   }
 
   function removeImage(url: string) {
@@ -219,7 +210,10 @@ export function ProductForm({
       </div>
 
       <div className="flex flex-col gap-2">
-        <span className="text-xs text-muted">Imágenes</span>
+        <span className="text-xs text-muted">
+          Imágenes (súbelas antes a un servicio como ImgBB o Cloudinary y pega
+          aquí cada enlace)
+        </span>
         {images.length > 0 && (
           <div className="flex flex-wrap gap-3">
             {images.map((url) => (
@@ -237,14 +231,24 @@ export function ProductForm({
             ))}
           </div>
         )}
-        <input
-          type="file"
-          accept="image/*"
-          multiple
-          onChange={handleImagesChange}
-          className="text-xs text-muted"
-        />
-        {uploading && <span className="text-xs text-neon">Subiendo...</span>}
+        <div className="flex gap-2">
+          <input
+            type="url"
+            placeholder="https://..."
+            value={newImageUrl}
+            onChange={(e) => setNewImageUrl(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                e.preventDefault();
+                addImageUrl();
+              }
+            }}
+            className="flex-1 border-2 border-white/10 bg-panel px-3 py-2 text-sm text-off-white outline-none focus:border-neon"
+          />
+          <button type="button" onClick={addImageUrl} className="btn !px-4">
+            AGREGAR
+          </button>
+        </div>
       </div>
 
       <div className="flex flex-col gap-2">

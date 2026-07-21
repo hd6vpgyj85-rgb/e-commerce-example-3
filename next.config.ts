@@ -2,25 +2,10 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   images: {
-    remotePatterns: [
-      {
-        protocol: "https",
-        hostname: "firebasestorage.googleapis.com",
-      },
-      {
-        protocol: "https",
-        hostname: "lh3.googleusercontent.com",
-      },
-      ...(process.env.NEXT_PUBLIC_USE_FIREBASE_EMULATORS === "true"
-        ? [
-            {
-              protocol: "http" as const,
-              hostname: "127.0.0.1",
-              port: "9199",
-            },
-          ]
-        : []),
-    ],
+    // Product/collection images are external URLs pasted by the admin (any
+    // free image host), so the exact set of hosts isn't known up front —
+    // skip Next's image optimization proxy instead of allowlisting hosts.
+    unoptimized: true,
   },
 };
 
