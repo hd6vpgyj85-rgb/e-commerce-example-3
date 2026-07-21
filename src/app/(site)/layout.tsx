@@ -4,7 +4,7 @@ import { CartDrawer } from "@/components/CartDrawer";
 import { CartProvider } from "@/context/CartContext";
 import { getVisibleCollections } from "@/lib/collections";
 
-export const revalidate = 60;
+export const dynamic = "force-dynamic";
 
 export default async function SiteLayout({
   children,

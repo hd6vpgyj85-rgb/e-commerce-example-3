@@ -4,7 +4,7 @@ import { ProductGallery } from "@/components/ProductGallery";
 import { RelatedProducts } from "@/components/RelatedProducts";
 import { getProductBySlug, getRandomRelatedProducts } from "@/lib/products";
 
-export const revalidate = 60;
+export const dynamic = "force-dynamic";
 
 export async function generateMetadata({
   params,
