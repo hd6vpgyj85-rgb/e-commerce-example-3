@@ -1,6 +1,6 @@
 "use client";
 
-import Image from "next/image";
+import { SafeImage } from "@/components/SafeImage";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { Loader2 } from "@/components/icons";
@@ -55,7 +55,7 @@ export default function AdminProductsPage() {
               >
                 <div className="relative aspect-square w-full overflow-hidden bg-panel">
                   {p.images[0] ? (
-                    <Image
+                    <SafeImage
                       src={p.images[0]}
                       alt={p.name}
                       fill

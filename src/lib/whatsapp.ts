@@ -8,7 +8,12 @@ function variantLabel(variant: Record<string, string>): string {
   return ` (${entries.map(([k, v]) => `${k}: ${v}`).join(", ")})`;
 }
 
-export function buildOrderMessage(items: CartItem[], total: number): string {
+export function buildOrderMessage(
+  items: CartItem[],
+  total: number,
+  customerName: string,
+  customerPhone: string
+): string {
   const lines = items.map((item) => {
     const lineTotal = formatPrice(item.unitPrice * item.qty);
     return `• ${item.name}${variantLabel(item.variant)} x${item.qty} — ${lineTotal}`;
@@ -20,6 +25,9 @@ export function buildOrderMessage(items: CartItem[], total: number): string {
     ...lines,
     "",
     `Total: ${formatPrice(total)}`,
+    "",
+    `Nombre: ${customerName}`,
+    `Teléfono: ${customerPhone}`,
   ].join("\n");
 }
 

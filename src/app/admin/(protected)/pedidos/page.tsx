@@ -49,6 +49,15 @@ export default function AdminOrdersPage() {
                 <OrderStatusSelect orderId={order.id} status={order.status} />
               </div>
 
+              {(order.customerName || order.customerPhone) && (
+                <div className="flex flex-wrap gap-x-4 text-sm text-off-white">
+                  {order.customerName && <span>{order.customerName}</span>}
+                  {order.customerPhone && (
+                    <span className="text-neon">{order.customerPhone}</span>
+                  )}
+                </div>
+              )}
+
               <ul className="flex flex-col gap-1">
                 {order.items.map((item, i) => (
                   <li key={i} className="text-sm text-off-white">

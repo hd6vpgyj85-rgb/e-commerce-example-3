@@ -15,7 +15,7 @@ export function CartButton() {
     >
       <ShoppingBag size={22} strokeWidth={1.5} />
       {totalItems > 0 && (
-        <span className="absolute -right-1 -top-1 flex h-4 min-w-4 items-center justify-center bg-neon px-1 text-[10px] font-semibold text-ink">
+        <span className="absolute -right-1 -top-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-neon px-1 text-[10px] font-semibold text-ink">
           {totalItems}
         </span>
       )}

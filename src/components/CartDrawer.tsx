@@ -1,6 +1,6 @@
 "use client";
 
-import Image from "next/image";
+import { SafeImage } from "@/components/SafeImage";
 import Link from "next/link";
 import { Minus, Plus, Trash2, X } from "@/components/icons";
 import { useCart } from "@/context/CartContext";
@@ -60,7 +60,7 @@ export function CartDrawer() {
                 >
                   <div className="product-frame relative h-20 w-20 shrink-0 overflow-hidden">
                     {item.image ? (
-                      <Image
+                      <SafeImage
                         src={item.image}
                         alt={item.name}
                         fill
