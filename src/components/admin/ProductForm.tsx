@@ -115,8 +115,10 @@ export function ProductForm({
       }
       router.push("/admin/productos");
       router.refresh();
-    } catch {
-      setError("No se pudo guardar el producto.");
+    } catch (err) {
+      setError(
+        err instanceof Error ? err.message : "No se pudo guardar el producto."
+      );
     } finally {
       setSaving(false);
     }

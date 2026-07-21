@@ -37,8 +37,10 @@ export function CollectionForm({ collection }: { collection?: Collection }) {
       }
       router.push("/admin/colecciones");
       router.refresh();
-    } catch {
-      setError("No se pudo guardar la colección.");
+    } catch (err) {
+      setError(
+        err instanceof Error ? err.message : "No se pudo guardar la colección."
+      );
     } finally {
       setSaving(false);
     }
