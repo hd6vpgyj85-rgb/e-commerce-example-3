@@ -12,7 +12,8 @@ export function buildOrderMessage(
   items: CartItem[],
   total: number,
   customerName: string,
-  customerPhone: string
+  customerPhone: string,
+  customerEmail: string
 ): string {
   const lines = items.map((item) => {
     const lineTotal = formatPrice(item.unitPrice * item.qty);
@@ -28,6 +29,7 @@ export function buildOrderMessage(
     "",
     `Nombre: ${customerName}`,
     `Teléfono: ${customerPhone}`,
+    ...(customerEmail ? [`Correo: ${customerEmail}`] : []),
   ].join("\n");
 }
 

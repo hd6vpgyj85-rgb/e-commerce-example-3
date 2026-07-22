@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { ChevronDown } from "@/components/icons";
 import type { Collection } from "@/lib/types";
@@ -8,6 +9,11 @@ import type { Collection } from "@/lib/types";
 export function NavBar({ collections }: { collections: Collection[] }) {
   const [collectionsOpen, setCollectionsOpen] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const pathname = usePathname();
+
+  const isHome = pathname === "/";
+  const isProductos = pathname === "/productos";
+  const isColeccion = pathname.startsWith("/coleccion");
 
   return (
     <nav className="neon-glow-line border-b border-white/5 bg-ink">
@@ -15,7 +21,9 @@ export function NavBar({ collections }: { collections: Collection[] }) {
         <div className="hidden items-center gap-8 py-3 md:flex">
           <Link
             href="/"
-            className="font-display text-sm tracking-[0.15em] text-off-white transition-colors hover:text-neon"
+            className={`font-display text-base tracking-[0.15em] transition-colors hover:text-neon ${
+              isHome ? "text-neon" : "text-off-white"
+            }`}
           >
             INICIO
           </Link>
@@ -29,7 +37,9 @@ export function NavBar({ collections }: { collections: Collection[] }) {
               type="button"
               onClick={() => setCollectionsOpen((v) => !v)}
               aria-expanded={collectionsOpen}
-              className="flex items-center gap-1.5 font-display text-sm tracking-[0.15em] text-off-white transition-colors hover:text-neon"
+              className={`flex items-center gap-1.5 font-display text-base tracking-[0.15em] transition-colors hover:text-neon ${
+                isColeccion ? "text-neon" : "text-off-white"
+              }`}
             >
               COLECCIONES
               <ChevronDown
@@ -56,7 +66,11 @@ export function NavBar({ collections }: { collections: Collection[] }) {
                   <Link
                     key={c.id}
                     href={`/coleccion/${c.slug}`}
-                    className="block px-4 py-2 text-sm text-off-white transition-colors hover:bg-panel-soft hover:text-neon"
+                    className={`block px-4 py-2 text-sm transition-colors hover:bg-panel-soft hover:text-neon ${
+                      pathname === `/coleccion/${c.slug}`
+                        ? "text-neon"
+                        : "text-off-white"
+                    }`}
                     onClick={() => setCollectionsOpen(false)}
                   >
                     {c.name}
@@ -68,7 +82,9 @@ export function NavBar({ collections }: { collections: Collection[] }) {
 
           <Link
             href="/productos"
-            className="font-display text-sm tracking-[0.15em] text-off-white transition-colors hover:text-neon"
+            className={`font-display text-base tracking-[0.15em] transition-colors hover:text-neon ${
+              isProductos ? "text-neon" : "text-off-white"
+            }`}
           >
             TODOS LOS PRODUCTOS
           </Link>
@@ -77,7 +93,7 @@ export function NavBar({ collections }: { collections: Collection[] }) {
         <button
           type="button"
           onClick={() => setMobileOpen((v) => !v)}
-          className="flex w-full items-center justify-between py-3 font-display text-sm tracking-[0.15em] text-off-white md:hidden"
+          className="flex w-full items-center justify-between py-4 font-display text-base tracking-[0.15em] text-off-white md:hidden"
           aria-expanded={mobileOpen}
         >
           MENÚ
@@ -92,26 +108,30 @@ export function NavBar({ collections }: { collections: Collection[] }) {
 
       <div
         className={`overflow-hidden bg-ink transition-[max-height] duration-300 ease-out md:hidden ${
-          mobileOpen ? "max-h-96" : "max-h-0"
+          mobileOpen ? "max-h-[28rem]" : "max-h-0"
         }`}
       >
         <div className="flex flex-col gap-1 px-4 pb-4">
           <Link
             href="/"
-            className="py-2 font-display text-sm tracking-[0.15em] text-off-white"
+            className={`py-2.5 font-display text-base tracking-[0.15em] ${
+              isHome ? "text-neon" : "text-off-white"
+            }`}
             onClick={() => setMobileOpen(false)}
           >
             INICIO
           </Link>
           <Link
             href="/productos"
-            className="py-2 font-display text-sm tracking-[0.15em] text-off-white"
+            className={`py-2.5 font-display text-base tracking-[0.15em] ${
+              isProductos ? "text-neon" : "text-off-white"
+            }`}
             onClick={() => setMobileOpen(false)}
           >
             TODOS LOS PRODUCTOS
           </Link>
           <div className="flex w-full flex-col items-center">
-            <p className="pt-2 font-display text-xs tracking-[0.15em] text-muted">
+            <p className="pt-3 font-display text-xs tracking-[0.15em] text-muted">
               COLECCIONES
             </p>
             <div className="flex w-fit flex-col items-start">
@@ -122,7 +142,11 @@ export function NavBar({ collections }: { collections: Collection[] }) {
                   <Link
                     key={c.id}
                     href={`/coleccion/${c.slug}`}
-                    className="py-2 pl-2 text-sm text-off-white"
+                    className={`py-2.5 pl-2 text-sm ${
+                      pathname === `/coleccion/${c.slug}`
+                        ? "text-neon"
+                        : "text-off-white"
+                    }`}
                     onClick={() => setMobileOpen(false)}
                   >
                     {c.name}

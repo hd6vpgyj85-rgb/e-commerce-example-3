@@ -1,6 +1,8 @@
 import { SafeImage } from "@/components/SafeImage";
+import Image from "next/image";
 import Link from "next/link";
 import { ProductGrid } from "@/components/ProductGrid";
+import { SocialShelf } from "@/components/SocialShelf";
 import { getVisibleCollections } from "@/lib/collections";
 import { getVisibleProducts } from "@/lib/products";
 import { siteConfig } from "@/lib/site-config";
@@ -15,18 +17,29 @@ export default async function Home() {
 
   return (
     <div className="flex flex-col">
-      <section className="mx-auto flex max-w-6xl flex-col items-start gap-6 px-4 py-20 sm:px-6 sm:py-28">
-        <h1 className="font-display text-5xl leading-[0.95] tracking-[0.02em] text-off-white sm:text-7xl">
-          ARMA TU PEDIDO.
-          <br />
-          <span className="text-neon">ACUERDA LA RECOGIDA.</span>
-        </h1>
-        <p className="max-w-md text-sm text-muted sm:text-base">
-          {siteConfig.description}
-        </p>
-        <Link href="/productos" className="btn btn-solid">
-          VER PRODUCTOS
-        </Link>
+      <section className="relative overflow-hidden">
+        <Image
+          src="/hero-bg.jpg"
+          alt=""
+          fill
+          priority
+          sizes="100vw"
+          className="object-cover"
+        />
+        <div className="absolute inset-0 bg-ink/75" />
+        <div className="relative mx-auto flex max-w-6xl flex-col items-start gap-6 px-4 py-20 sm:px-6 sm:py-28">
+          <h1 className="font-display text-5xl leading-[0.95] tracking-[0.02em] text-off-white sm:text-7xl">
+            ARMA TU PEDIDO.
+            <br />
+            <span className="text-neon">ACUERDA LA RECOGIDA.</span>
+          </h1>
+          <p className="max-w-md text-sm text-muted sm:text-base">
+            {siteConfig.description}
+          </p>
+          <Link href="/productos" className="btn btn-solid">
+            VER PRODUCTOS
+          </Link>
+        </div>
       </section>
 
       {collections.length > 0 && (
@@ -73,6 +86,8 @@ export default async function Home() {
           <ProductGrid products={products.slice(0, 8)} />
         </div>
       </section>
+
+      <SocialShelf />
     </div>
   );
 }

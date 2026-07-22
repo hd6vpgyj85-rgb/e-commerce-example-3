@@ -58,6 +58,7 @@ export interface Order {
   status: OrderStatus;
   customerName: string;
   customerPhone: string;
+  customerEmail: string;
   contactMessage: string;
   createdAt?: number;
 }

@@ -21,6 +21,7 @@ export default function CheckoutPage() {
   const [status, setStatus] = useState<"idle" | "sending" | "done">("idle");
   const [customerName, setCustomerName] = useState("");
   const [customerPhone, setCustomerPhone] = useState("");
+  const [customerEmail, setCustomerEmail] = useState("");
 
   const canSend = customerPhone.trim().length >= 7;
 
@@ -46,10 +47,11 @@ export default function CheckoutPage() {
     }));
     const name = customerName.trim();
     const phone = customerPhone.trim();
-    const message = buildOrderMessage(items, totalPrice, name, phone);
+    const email = customerEmail.trim();
+    const message = buildOrderMessage(items, totalPrice, name, phone, email);
 
     try {
-      await createOrder(orderItems, totalPrice, name, phone, message);
+      await createOrder(orderItems, totalPrice, name, phone, email, message);
     } catch {
       // If Firestore isn't reachable, still let the customer send the WhatsApp message.
     }
@@ -77,8 +79,8 @@ export default function CheckoutPage() {
           MENSAJE ENVIADO
         </h1>
         <p className="mt-4 text-sm text-muted">
-          Ponte de acuerdo con nosotros por WhatsApp para definir el punto
-          medio y la hora de recogida de tu pedido.
+          Te vamos a escribir por WhatsApp para acordar el punto medio y la
+          hora de recogida de tu pedido.
         </p>
         <Link href="/productos" className="btn btn-solid mt-8 inline-flex">
           SEGUIR VIENDO PRODUCTOS
@@ -147,9 +149,9 @@ export default function CheckoutPage() {
           PUNTO MEDIO — RECOGIDA EN PERSONA
         </p>
         <p className="mt-2 text-sm text-muted">
-          Este pedido no se paga en línea. Al presionar el botón se abrirá
-          WhatsApp con el detalle de tu pedido para que nos pongamos de
-          acuerdo en un punto medio y la hora de recogida.
+          Este pedido no se paga en línea. Al presionar el botón te vamos a
+          escribir por WhatsApp con el detalle de tu pedido para acordar un
+          punto medio y la hora de recogida.
         </p>
 
         <div className="mt-5 flex flex-col gap-3">
@@ -172,6 +174,18 @@ export default function CheckoutPage() {
               value={customerPhone}
               onChange={(e) => setCustomerPhone(e.target.value)}
               placeholder="656 000 0000"
+              className="border-2 border-white/10 bg-ink px-3 py-2 text-sm text-off-white outline-none focus:border-neon"
+            />
+          </label>
+          <label className="flex flex-col gap-1.5">
+            <span className="text-xs text-muted">
+              Correo electrónico (opcional)
+            </span>
+            <input
+              type="email"
+              value={customerEmail}
+              onChange={(e) => setCustomerEmail(e.target.value)}
+              placeholder="tu@correo.com"
               className="border-2 border-white/10 bg-ink px-3 py-2 text-sm text-off-white outline-none focus:border-neon"
             />
           </label>

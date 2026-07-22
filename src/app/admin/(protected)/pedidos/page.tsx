@@ -49,11 +49,14 @@ export default function AdminOrdersPage() {
                 <OrderStatusSelect orderId={order.id} status={order.status} />
               </div>
 
-              {(order.customerName || order.customerPhone) && (
+              {(order.customerName || order.customerPhone || order.customerEmail) && (
                 <div className="flex flex-wrap gap-x-4 text-sm text-off-white">
                   {order.customerName && <span>{order.customerName}</span>}
                   {order.customerPhone && (
                     <span className="text-neon">{order.customerPhone}</span>
+                  )}
+                  {order.customerEmail && (
+                    <span className="text-muted">{order.customerEmail}</span>
                   )}
                 </div>
               )}

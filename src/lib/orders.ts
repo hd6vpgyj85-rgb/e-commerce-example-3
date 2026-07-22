@@ -22,6 +22,7 @@ function mapOrder(id: string, data: Record<string, unknown>): Order {
     status: (data.status as OrderStatus) ?? "pendiente",
     customerName: (data.customerName as string) ?? "",
     customerPhone: (data.customerPhone as string) ?? "",
+    customerEmail: (data.customerEmail as string) ?? "",
     contactMessage: (data.contactMessage as string) ?? "",
     createdAt: (data.createdAt as Timestamp | undefined)?.toMillis?.(),
   };
@@ -32,6 +33,7 @@ export async function createOrder(
   total: number,
   customerName: string,
   customerPhone: string,
+  customerEmail: string,
   contactMessage: string
 ): Promise<string> {
   const docRef = await addDoc(collection(db, ORDERS_PATH), {
@@ -40,6 +42,7 @@ export async function createOrder(
     status: "pendiente" as OrderStatus,
     customerName,
     customerPhone,
+    customerEmail,
     contactMessage,
     createdAt: serverTimestamp(),
   });
