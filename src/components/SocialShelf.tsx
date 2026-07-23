@@ -37,9 +37,9 @@ export function SocialShelf() {
   return (
     <section className="w-full py-10 sm:hidden">
       <h2 className="mx-auto max-w-6xl px-4 font-display text-2xl tracking-[0.08em] text-off-white sm:px-6">
-        SÍGUENOS
+        CONTACTO
       </h2>
-      <div className="group mt-6 overflow-hidden">
+      <div className="group mt-6 overflow-x-auto [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
         <div className="flex w-max animate-social-scroll gap-4 px-4 group-hover:[animation-play-state:paused] sm:px-6">
           {items.map((s, i) => (
             <a
